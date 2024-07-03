@@ -13,12 +13,12 @@ interface ApiHandler {
             val body = response.body()
 
             if (response.isSuccessful && body != null) {
-                NetworkResult.Success(response.code(), body)
+                NetworkResult.Success(body)
             } else {
-                NetworkResult.Error(code = response.code(), errorMsg = response.errorBody().toString())
+                NetworkResult.Error(errorMsg = response.errorBody().toString())
             }
         } catch (e:HttpException){
-            NetworkResult.Error(e.code(),e.message())
+            NetworkResult.Error(e.message())
         } catch (e:Throwable){
             NetworkResult.Exception(e)
         }

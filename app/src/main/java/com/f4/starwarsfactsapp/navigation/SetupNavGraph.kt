@@ -33,13 +33,19 @@ fun SetupNavGraph(
         ) {
             /** список фактов */
             composable(route = Routes.ListFacts.route) {
-                ListFactsScreen()
+                ListFactsScreen(
+                    navigate = { route ->
+                        navController.navigate(route) {
+                            launchSingleTop = true
+                        }
+                    }
+                )
             }
             /** информация о факте */
             composable(
                 route = "${Routes.InfoFact.route}/{factId}",
                 arguments = listOf(
-                    navArgument(name = "profileId") {
+                    navArgument(name = "factId") {
                         type = NavType.IntType
                     }
                 )

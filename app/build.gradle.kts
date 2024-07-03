@@ -82,6 +82,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.retrofit)
     implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
 
     // Navigation
     implementation(libs.androidx.navigation.runtime.ktx)
