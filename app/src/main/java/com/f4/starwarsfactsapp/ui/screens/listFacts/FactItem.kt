@@ -21,7 +21,7 @@ import com.f4.starwarsfactsapp.util.getIdFromUrl
 
 @Composable
 fun FactItem(
-    fact: PersonFacts,
+    person: PersonFacts,
     navigate: (String) -> Unit
 ) {
     Card(
@@ -31,7 +31,7 @@ fun FactItem(
         modifier = Modifier
             .padding(bottom = 10.dp)
             .clickable {
-                navigate("${Routes.InfoFact.route}/${getIdFromUrl(fact.url)}")
+                navigate("${Routes.InfoFact.route}/${getIdFromUrl(person.url)}")
             }
             .fillMaxWidth()
     ) {
@@ -43,15 +43,15 @@ fun FactItem(
             verticalArrangement = Arrangement.Center,
         ) {
             Text(
-                text = fact.name,
+                text = person.name,
                 style = MaterialTheme.typography.titleLarge,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
                 modifier = Modifier.width(200.dp),
             )
             Text(
-                text = fact.birthYear,
-                style = MaterialTheme.typography.titleLarge,
+                text = person.birthYear,
+                style = MaterialTheme.typography.titleMedium,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
                 modifier = Modifier.width(200.dp),

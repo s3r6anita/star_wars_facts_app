@@ -5,7 +5,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.f4.starwarsfactsapp.data.model.PersonFacts
 import com.f4.starwarsfactsapp.ui.screens.ErrorScreen
 import com.f4.starwarsfactsapp.ui.screens.LoadingScreen
 import com.f4.starwarsfactsapp.ui.screens.UIState
@@ -26,7 +25,6 @@ fun ListFactsScreen(
 
         is UIState.Success -> {
             SuccessScreen(
-                facts = (uiState as UIState.Success).data as List<PersonFacts>,
                 navigate = navigate
             )
         }

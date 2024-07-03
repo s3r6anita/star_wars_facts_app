@@ -17,6 +17,7 @@
     <string name="species">Вид</string>
     <string name="vehicles">Транспорт</string>
     <string name="starships">Космические корабли</string>
+    <string name="persons_page_title">Персонажи</string>
 
 
 </resources>

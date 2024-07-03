@@ -3,6 +3,7 @@ package com.f4.starwarsfactsapp.ui.screens.fact
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.f4.starwarsfactsapp.data.model.NetworkResult
+import com.f4.starwarsfactsapp.data.model.PersonFacts
 import com.f4.starwarsfactsapp.data.network.NetworkRepository
 import com.f4.starwarsfactsapp.ui.screens.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,12 +19,17 @@ class FactViewModel @Inject constructor(
 ): ViewModel() {
     private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
     val uiState = _uiState.asStateFlow()
+    private val _facts = MutableStateFlow<PersonFacts?>(null)
+    val facts = _facts.asStateFlow()
 
     fun getPeopleFact(peopleId: Int) {
         _uiState.value = UIState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = networkRepository.getPersonFacts(peopleId)) {
-                is NetworkResult.Success -> {_uiState.value = UIState.Success(response.data) }
+                is NetworkResult.Success -> {
+                    _facts.value = response.data
+                    _uiState.value = UIState.Success
+                }
                 is NetworkResult.Error -> { _uiState.value = UIState.Error(msg = response.errorMsg) }
                 is NetworkResult.Exception -> { _uiState.value = UIState.Error(msg = response.e.message ?: "") }
             }

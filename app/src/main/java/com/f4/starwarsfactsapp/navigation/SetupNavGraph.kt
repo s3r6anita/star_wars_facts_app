@@ -3,11 +3,11 @@ package com.f4.starwarsfactsapp.navigation
 import androidx.compose.animation.EnterTransition
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import androidx.navigation.NavType
 import com.f4.starwarsfactsapp.ui.screens.fact.FactScreen
 import com.f4.starwarsfactsapp.ui.screens.listFacts.ListFactsScreen
 
@@ -51,7 +51,7 @@ fun SetupNavGraph(
                 )
             ) { backStackEntry ->
                 FactScreen(
-                    factId = backStackEntry.arguments?.getInt("factId") ?: -1,
+                    personId = backStackEntry.arguments?.getInt("factId") ?: -1,
                 )
             }
         }
