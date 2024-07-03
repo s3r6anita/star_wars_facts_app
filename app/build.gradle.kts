@@ -5,6 +5,10 @@ plugins {
     alias(libs.plugins.dagger.hilt.android)
 }
 
+hilt {
+    enableAggregatingTask = false
+}
+
 android {
     namespace = "com.f4.starwarsfactsapp"
     compileSdk = 34
@@ -68,7 +72,18 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // DI
     implementation(libs.hilt.android)
     ksp(libs.dagger.compiler)
     ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    // Retrofit + GSON
+    implementation(libs.converter.gson)
+    implementation(libs.retrofit)
+    implementation(libs.okhttp)
+
+    // Navigation
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.navigation.compose)
 }
