@@ -1,4 +1,4 @@
-package com.f4.starwarsfactsapp.ui.screens.listFacts
+package com.f4.starwarsfactsapp.ui.screens.listPersons
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,10 +43,10 @@ fun SuccessScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top,
                 modifier = Modifier
-                    .fillMaxSize()
                     .padding(innerPadding)
                     .padding(top = 20.dp, start = 20.dp, end = 20.dp)
-                    .verticalScroll(scrollState),
+                    .verticalScroll(scrollState)
+                    .fillMaxSize(),
             ) {
                 Text(
                     text = stringResource(R.string.persons_page_title),

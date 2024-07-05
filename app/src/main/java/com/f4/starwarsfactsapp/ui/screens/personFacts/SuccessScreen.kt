@@ -1,4 +1,4 @@
-package com.f4.starwarsfactsapp.ui.screens.fact
+package com.f4.starwarsfactsapp.ui.screens.personFacts
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,12 +22,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.f4.starwarsfactsapp.R
 import com.f4.starwarsfactsapp.data.model.PersonFacts
+import com.f4.starwarsfactsapp.ui.StarWarsFactsTopBar
 
 @Composable
 fun SuccessScreen(
-    fact: PersonFacts
+    fact: PersonFacts,
+    navigateUp: () -> Unit,
 ) {
-    Scaffold { innerPadding ->
+    Scaffold(
+        topBar = { StarWarsFactsTopBar(navigateUp) }
+    ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -56,10 +60,10 @@ fun SuccessScreen(
                         modifier = Modifier.padding(bottom = 20.dp),
                     )
                     TextComponent(
-                        header = stringResource(R.string.height), value = fact.height.toString()
+                        header = stringResource(R.string.height), value = fact.height
                     )
                     TextComponent(
-                        header = stringResource(R.string.mass), value = fact.mass.toString()
+                        header = stringResource(R.string.mass), value = fact.mass
                     )
                     TextComponent(
                         header = stringResource(R.string.hair_color), value = fact.hairColor
@@ -108,7 +112,7 @@ fun TextComponent(header: String, value: String) {
             .fillMaxWidth()
             .padding(bottom = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.Top
     ) {
         Text(
             text = header,

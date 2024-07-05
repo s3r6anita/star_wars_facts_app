@@ -1,4 +1,4 @@
-package com.f4.starwarsfactsapp.ui.screens.listFacts
+package com.f4.starwarsfactsapp.ui.screens.listPersons
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

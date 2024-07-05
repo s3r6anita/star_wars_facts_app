@@ -1,4 +1,4 @@
-package com.f4.starwarsfactsapp.ui.screens
+package com.f4.starwarsfactsapp.ui
 
 sealed class UIState {
     data object Loading : UIState()

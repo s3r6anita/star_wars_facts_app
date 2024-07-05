@@ -1,7 +1,7 @@
 package com.f4.starwarsfactsapp
 
-import com.f4.starwarsfactsapp.data.network.NetworkRepository
-import com.f4.starwarsfactsapp.data.network.NetworkRepositoryImpl
+import com.f4.starwarsfactsapp.data.network.PersonRepository
+import com.f4.starwarsfactsapp.data.network.PersonRepositoryImpl
 import com.f4.starwarsfactsapp.data.network.service.StarWarsService
 import dagger.Module
 import dagger.Provides
@@ -21,8 +21,8 @@ object AppModule {
     @[Provides Singleton]
     fun getNetworkRepository(
         starWarsService: StarWarsService,
-    ): NetworkRepository {
-        return NetworkRepositoryImpl(starWarsService)
+    ): PersonRepository {
+        return PersonRepositoryImpl(starWarsService)
     }
 
     @[Provides Singleton]

@@ -1,11 +1,11 @@
-package com.f4.starwarsfactsapp.ui.screens.listFacts
+package com.f4.starwarsfactsapp.ui.screens.listPersons
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.f4.starwarsfactsapp.data.model.NetworkResult
 import com.f4.starwarsfactsapp.data.model.PersonFacts
-import com.f4.starwarsfactsapp.data.network.NetworkRepository
-import com.f4.starwarsfactsapp.ui.screens.UIState
+import com.f4.starwarsfactsapp.data.network.PersonRepository
+import com.f4.starwarsfactsapp.ui.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ListFactsViewModel @Inject constructor(
-    private val networkRepository: NetworkRepository
+    private val personRepository: PersonRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
     val uiState = _uiState.asStateFlow()
@@ -31,7 +31,7 @@ class ListFactsViewModel @Inject constructor(
     fun getPeopleFacts(page: Int? = null) {
         _uiState.value = UIState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            when (val response = networkRepository.getPeopleFacts(page)) {
+            when (val response = personRepository.getPersons(page)) {
                 is NetworkResult.Success -> {
                     _persons.value = response.data.results
                     _next.value = response.data.next
@@ -52,7 +52,7 @@ class ListFactsViewModel @Inject constructor(
     fun addPeopleFacts(page: Int? = null) {
 //        _uiState.value = UIState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            when (val response = networkRepository.getPeopleFacts(page)) {
+            when (val response = personRepository.getPersons(page)) {
                 is NetworkResult.Success -> {
                     _persons.value += response.data.results
                     _next.value = response.data.next

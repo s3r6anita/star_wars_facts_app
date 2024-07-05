@@ -9,8 +9,8 @@ import retrofit2.http.Query
 
 interface StarWarsService {
     @GET("people/")
-    suspend fun getPeopleFacts(@Query("page") page: Int?): Response<PersonsFactsResponse>
+    suspend fun getPersons(@Query("page") page: Int?): Response<PersonsFactsResponse>
 
     @GET("people/{id}")
-    suspend fun getPeopleFact(@Path("id") id: Int): Response<PersonFacts>
+    suspend fun getPersonFact(@Path("id") id: Int): Response<PersonFacts>
 }

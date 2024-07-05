@@ -1,28 +1,22 @@
-package com.f4.starwarsfactsapp.ui.screens.fact
+package com.f4.starwarsfactsapp.ui.screens.listPersons
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.f4.starwarsfactsapp.ui.UIState
 import com.f4.starwarsfactsapp.ui.screens.ErrorScreen
 import com.f4.starwarsfactsapp.ui.screens.LoadingScreen
-import com.f4.starwarsfactsapp.ui.screens.UIState
 import kotlinx.coroutines.launch
 
 @Composable
-fun FactScreen(
-    personId: Int,
-    viewModel: FactViewModel = hiltViewModel()
+fun ListFactsScreen(
+    navigate: (String) -> Unit,
+    viewModel: ListFactsViewModel = hiltViewModel()
 ) {
     val scope = rememberCoroutineScope()
     val uiState by viewModel.uiState.collectAsState()
-    val facts by viewModel.facts.collectAsState()
-
-    LaunchedEffect(Unit) {
-        scope.launch { viewModel.getPeopleFact(personId) }
-    }
 
     when (uiState) {
         is UIState.Loading -> {
@@ -30,13 +24,15 @@ fun FactScreen(
         }
 
         is UIState.Success -> {
-            SuccessScreen(facts!!)
+            SuccessScreen(
+                navigate = navigate
+            )
         }
 
         is UIState.Error -> {
             ErrorScreen(
                 message = (uiState as UIState.Error).msg,
-                retryAction = { scope.launch { viewModel.getPeopleFact(personId) } }
+                retryAction = { scope.launch { viewModel.getPeopleFacts() } }
             )
         }
     }
