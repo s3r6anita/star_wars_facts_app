@@ -1,11 +1,17 @@
 package com.f4.starwarsfactsapp
 
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.dataStore
+import com.f4.starwarsfactsapp.data.model.PersonsFactsResponse
 import com.f4.starwarsfactsapp.data.network.PersonRepository
 import com.f4.starwarsfactsapp.data.network.PersonRepositoryImpl
 import com.f4.starwarsfactsapp.data.network.service.StarWarsService
+import com.f4.starwarsfactsapp.util.PersonsFactsResponseSerializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -15,14 +21,20 @@ import javax.inject.Singleton
 
 private const val BASE_URL = "https://swapi.dev/api/"
 
+private val Context.dataStore: DataStore<PersonsFactsResponse> by dataStore(
+    fileName = "facts_storage.pb",
+    serializer = PersonsFactsResponseSerializer
+)
+
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
     @[Provides Singleton]
-    fun getNetworkRepository(
+    fun getPersonRepository(
         starWarsService: StarWarsService,
+        @ApplicationContext appContext: Context
     ): PersonRepository {
-        return PersonRepositoryImpl(starWarsService)
+        return PersonRepositoryImpl(starWarsService, appContext.dataStore)
     }
 
     @[Provides Singleton]

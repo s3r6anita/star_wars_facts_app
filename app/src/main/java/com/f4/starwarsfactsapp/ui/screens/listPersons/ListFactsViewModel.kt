@@ -36,14 +36,25 @@ class ListFactsViewModel @Inject constructor(
                     _persons.value = response.data.results
                     _next.value = response.data.next
                     _uiState.value = UIState.Success
+
+//                    personRepository.savePersons(response.data)
                 }
 
                 is NetworkResult.Error -> {
                     _uiState.value = UIState.Error(msg = response.errorMsg)
+//                    _uiState.value = UIState.Success
+//                    personRepository.getPersons().collect {
+//                        _persons.value = it.results
+//                    }
                 }
 
                 is NetworkResult.Exception -> {
                     _uiState.value = UIState.Error(msg = response.e.message ?: "")
+
+//                    _uiState.value = UIState.Success
+//                    personRepository.getPersons().collect {
+//                        _persons.value = it.results
+//                    }
                 }
             }
         }
@@ -52,7 +63,7 @@ class ListFactsViewModel @Inject constructor(
     fun addPeopleFacts(page: Int? = null) {
 //        _uiState.value = UIState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            when (val response = personRepository.getPersons(page)) {
+            when (val response = personRepository.getNewPersons(page)) {
                 is NetworkResult.Success -> {
                     _persons.value += response.data.results
                     _next.value = response.data.next
