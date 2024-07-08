@@ -28,10 +28,10 @@ class FactViewModel @Inject constructor(
             when (val response = personRepository.getPersonFacts(peopleId)) {
                 is NetworkResult.Success -> {
                     _facts.value = response.data
-                    _uiState.value = UIState.Success
+                    _uiState.value = UIState.Success(_facts.value)
                 }
-                is NetworkResult.Error -> { _uiState.value = UIState.Error(msg = response.errorMsg) }
-                is NetworkResult.Exception -> { _uiState.value = UIState.Error(msg = response.e.message ?: "") }
+                is NetworkResult.Error -> { _uiState.value = UIState.Error(msg = response.errorMsg, _facts.value) }
+                is NetworkResult.Exception -> { _uiState.value = UIState.Error(msg = response.e.message ?: "", _facts.value) }
             }
         }
     }

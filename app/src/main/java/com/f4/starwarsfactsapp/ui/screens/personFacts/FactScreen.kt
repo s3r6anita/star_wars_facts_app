@@ -30,13 +30,13 @@ fun FactScreen(
             LoadingScreen()
         }
 
-        is UIState.Success -> {
+        is UIState.Success<*> -> {
             SuccessScreen(facts!!, navigateUp)
         }
 
-        is UIState.Error -> {
+        is UIState.Error<*> -> {
             ErrorScreen(
-                message = (uiState as UIState.Error).msg,
+                message = (uiState as UIState.Error<*>).msg,
                 retryAction = { scope.launch { viewModel.getPeopleFact(personId) } }
             )
         }

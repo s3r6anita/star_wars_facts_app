@@ -20,15 +20,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.f4.starwarsfactsapp.R
+import com.f4.starwarsfactsapp.data.model.PersonFacts
 import com.f4.starwarsfactsapp.util.getPageFromUrl
 
 @Composable
 fun SuccessScreen(
     navigate: (String) -> Unit,
+    persons: List<PersonFacts>,
     viewModel: ListFactsViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
-    val persons by viewModel.persons.collectAsState()
     val next by viewModel.next.collectAsState()
 
     if (scrollState.value == scrollState.maxValue && next != null) {

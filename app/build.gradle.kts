@@ -89,6 +89,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     // DataStore
-    implementation(libs.androidx.datastore.core)
+    implementation(libs.androidx.datastore)
     implementation(libs.kotlinx.collections.immutable)
 }

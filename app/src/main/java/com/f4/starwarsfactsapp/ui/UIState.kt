@@ -1,7 +1,7 @@
 package com.f4.starwarsfactsapp.ui
 
-sealed class UIState {
-    data object Loading : UIState()
-    data object Success : UIState()
-    data class Error(val msg: String) : UIState()
+sealed interface UIState {
+    data object Loading : UIState
+    data class Success<T>(val data: T) : UIState
+    data class Error<T>(val msg: String, val data: T? = null) : UIState
 }

@@ -5,10 +5,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.f4.starwarsfactsapp.data.model.PersonsFactsResponse
 import com.f4.starwarsfactsapp.ui.UIState
-import com.f4.starwarsfactsapp.ui.screens.ErrorScreen
 import com.f4.starwarsfactsapp.ui.screens.LoadingScreen
-import kotlinx.coroutines.launch
 
 @Composable
 fun ListFactsScreen(
@@ -23,17 +22,22 @@ fun ListFactsScreen(
             LoadingScreen()
         }
 
-        is UIState.Success -> {
+        is UIState.Success<*> -> {
             SuccessScreen(
-                navigate = navigate
+                navigate = navigate,
+                persons = ((uiState as UIState.Success<*>).data as PersonsFactsResponse).results
             )
         }
 
-        is UIState.Error -> {
-            ErrorScreen(
-                message = (uiState as UIState.Error).msg,
-                retryAction = { scope.launch { viewModel.getPeopleFacts() } }
+        is UIState.Error<*> -> {
+            SuccessScreen(
+                navigate = navigate,
+                persons = ((uiState as UIState.Error<*>).data as PersonsFactsResponse).results
             )
+//            ErrorScreen(
+//                message = (uiState as UIState.Error<*>).msg,
+//                retryAction = { scope.launch { viewModel.getPeopleFacts() } }
+//            )
         }
     }
 }

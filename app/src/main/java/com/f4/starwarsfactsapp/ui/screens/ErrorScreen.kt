@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
@@ -33,6 +34,7 @@ fun ErrorScreen(
 
     Column(
         modifier = modifier
+            .padding(horizontal = 20.dp)
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.background),
         verticalArrangement = Arrangement.Center,
@@ -53,5 +55,6 @@ fun ErrorScreen(
                 tint = color
             )
         }
+
     }
 }

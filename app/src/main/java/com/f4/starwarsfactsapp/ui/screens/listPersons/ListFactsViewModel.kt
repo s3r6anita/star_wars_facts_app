@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.f4.starwarsfactsapp.data.model.NetworkResult
 import com.f4.starwarsfactsapp.data.model.PersonFacts
+import com.f4.starwarsfactsapp.data.model.PersonsFactsResponse
 import com.f4.starwarsfactsapp.data.network.PersonRepository
 import com.f4.starwarsfactsapp.ui.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +23,7 @@ class ListFactsViewModel @Inject constructor(
     private val _next = MutableStateFlow<String?>(null)
     val next = _next.asStateFlow()
     private val _persons = MutableStateFlow<List<PersonFacts>>(emptyList())
-    val persons = _persons.asStateFlow()
+//    val persons = _persons.asStateFlow()
 
     init {
         getPeopleFacts()
@@ -31,31 +32,11 @@ class ListFactsViewModel @Inject constructor(
     fun getPeopleFacts(page: Int? = null) {
         _uiState.value = UIState.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            when (val response = personRepository.getPersons(page)) {
-                is NetworkResult.Success -> {
-                    _persons.value = response.data.results
-                    _next.value = response.data.next
-                    _uiState.value = UIState.Success
+            val res = personRepository.getPersons(page)
+            _uiState.value = res
 
-//                    personRepository.savePersons(response.data)
-                }
-
-                is NetworkResult.Error -> {
-                    _uiState.value = UIState.Error(msg = response.errorMsg)
-//                    _uiState.value = UIState.Success
-//                    personRepository.getPersons().collect {
-//                        _persons.value = it.results
-//                    }
-                }
-
-                is NetworkResult.Exception -> {
-                    _uiState.value = UIState.Error(msg = response.e.message ?: "")
-
-//                    _uiState.value = UIState.Success
-//                    personRepository.getPersons().collect {
-//                        _persons.value = it.results
-//                    }
-                }
+            if (res is UIState.Success<*>) {
+                _next.value = (res.data as PersonsFactsResponse).next
             }
         }
     }
@@ -67,15 +48,15 @@ class ListFactsViewModel @Inject constructor(
                 is NetworkResult.Success -> {
                     _persons.value += response.data.results
                     _next.value = response.data.next
-                    _uiState.value = UIState.Success
+                    _uiState.value = UIState.Success(_persons.value)
                 }
 
                 is NetworkResult.Error -> {
-                    _uiState.value = UIState.Error(msg = response.errorMsg)
+                    _uiState.value = UIState.Error(msg = response.errorMsg, _persons.value)
                 }
 
                 is NetworkResult.Exception -> {
-                    _uiState.value = UIState.Error(msg = response.e.message ?: "")
+                    _uiState.value = UIState.Error(msg = response.e.message ?: "", _persons.value)
                 }
             }
         }
