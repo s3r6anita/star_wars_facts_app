@@ -24,7 +24,7 @@ import com.f4.starwarsfactsapp.data.model.PersonFacts
 import com.f4.starwarsfactsapp.util.getPageFromUrl
 
 @Composable
-fun SuccessScreen(
+fun SuccessListFactsScreen(
     navigate: (String) -> Unit,
     persons: List<PersonFacts>,
     viewModel: ListFactsViewModel = hiltViewModel()
