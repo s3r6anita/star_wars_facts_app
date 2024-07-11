@@ -1,4 +1,4 @@
-package com.f4.starwarsfactsapp.ui.screens.personFacts
+package com.f4.starwarsfactsapp.ui.screens.persons.person
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,12 +21,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.f4.starwarsfactsapp.R
-import com.f4.starwarsfactsapp.data.model.PersonFacts
+import com.f4.starwarsfactsapp.data.model.Person
 import com.f4.starwarsfactsapp.ui.StarWarsFactsTopBar
 
 @Composable
 fun SuccessScreen(
-    fact: PersonFacts,
+    fact: Person,
     navigateUp: () -> Unit,
 ) {
     Scaffold(

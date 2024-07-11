@@ -72,13 +72,16 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Compose
+    implementation(libs.androidx.lifecycle.runtime.compose)
+
     // DI
     implementation(libs.hilt.android)
     ksp(libs.dagger.compiler)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
-    // Retrofit + GSON
+    // Retrofit + GSON + OkHttp
     implementation(libs.converter.gson)
     implementation(libs.retrofit)
     implementation(libs.okhttp)
@@ -91,4 +94,5 @@ dependencies {
     // DataStore
     implementation(libs.androidx.datastore)
     implementation(libs.kotlinx.collections.immutable)
+
 }

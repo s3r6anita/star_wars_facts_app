@@ -1,4 +1,4 @@
-package com.f4.starwarsfactsapp.ui.screens.listPersons
+package com.f4.starwarsfactsapp.ui.screens.persons.list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,13 +15,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.f4.starwarsfactsapp.data.model.PersonFacts
+import com.f4.starwarsfactsapp.data.model.Person
 import com.f4.starwarsfactsapp.navigation.Routes
 import com.f4.starwarsfactsapp.util.getIdFromUrl
 
 @Composable
 fun FactItem(
-    person: PersonFacts,
+    person: Person,
     navigate: (String) -> Unit
 ) {
     Card(

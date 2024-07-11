@@ -1,11 +1,11 @@
-package com.f4.starwarsfactsapp.ui.screens.personFacts
+package com.f4.starwarsfactsapp.ui.screens.persons.person
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.f4.starwarsfactsapp.data.PersonRepository
 import com.f4.starwarsfactsapp.data.model.NetworkResult
-import com.f4.starwarsfactsapp.data.model.PersonFacts
-import com.f4.starwarsfactsapp.data.network.PersonRepository
-import com.f4.starwarsfactsapp.ui.UIState
+import com.f4.starwarsfactsapp.data.model.Person
+import com.f4.starwarsfactsapp.ui.screens.persons.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,12 +14,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class FactViewModel @Inject constructor(
+class PersonFactsViewModel @Inject constructor(
     private val personRepository: PersonRepository
 ): ViewModel() {
     private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
     val uiState = _uiState.asStateFlow()
-    private val _facts = MutableStateFlow<PersonFacts?>(null)
+    private val _facts = MutableStateFlow<Person?>(null)
     val facts = _facts.asStateFlow()
 
     fun getPeopleFact(peopleId: Int) {

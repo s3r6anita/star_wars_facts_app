@@ -1,14 +1,16 @@
 package com.f4.starwarsfactsapp.navigation
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.f4.starwarsfactsapp.ui.screens.listPersons.ListFactsScreen
-import com.f4.starwarsfactsapp.ui.screens.personFacts.FactScreen
+import com.f4.starwarsfactsapp.ui.screens.persons.list.ListFactsScreen
+import com.f4.starwarsfactsapp.ui.screens.persons.person.PersonScreen
 
 @Composable
 fun SetupNavGraph(
@@ -33,6 +35,7 @@ fun SetupNavGraph(
             /** список фактов */
             composable(route = Routes.ListFacts.route) {
                 ListFactsScreen(
+                    snackbarHostState = remember { SnackbarHostState() },
                     navigate = { route ->
                         navController.navigate(route) {
                             launchSingleTop = true
@@ -49,7 +52,7 @@ fun SetupNavGraph(
                     }
                 )
             ) { backStackEntry ->
-                FactScreen(
+                PersonScreen(
                     navigateUp = { navController.navigateUp() },
                     personId = backStackEntry.arguments?.getInt("factId") ?: -1,
                 )

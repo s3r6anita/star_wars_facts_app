@@ -2,7 +2,7 @@ package com.f4.starwarsfactsapp.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class PersonFacts(
+data class Person(
     val name: String,
     val height: String,
     val mass: String,

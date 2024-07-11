@@ -5,7 +5,7 @@ fun getIdFromUrl(url: String): Int {
     return parts.lastOrNull()?.toIntOrNull() ?: -1
 }
 
-fun getPageFromUrl(url: String): Int {
-    val parts = url.split("?page=")
-    return parts.lastOrNull()?.toIntOrNull() ?: -1
+fun getPageFromUrl(url: String?): Int {
+    val parts = url?.split("?page=")
+    return parts?.lastOrNull()?.toIntOrNull() ?: -1
 }

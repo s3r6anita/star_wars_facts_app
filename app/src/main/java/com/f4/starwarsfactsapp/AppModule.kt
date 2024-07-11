@@ -3,9 +3,9 @@ package com.f4.starwarsfactsapp
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
+import com.f4.starwarsfactsapp.data.PersonRepository
+import com.f4.starwarsfactsapp.data.PersonRepositoryImpl
 import com.f4.starwarsfactsapp.data.model.PersonsFactsResponse
-import com.f4.starwarsfactsapp.data.network.PersonRepository
-import com.f4.starwarsfactsapp.data.network.PersonRepositoryImpl
 import com.f4.starwarsfactsapp.data.network.service.StarWarsService
 import com.f4.starwarsfactsapp.util.PersonsFactsResponseSerializer
 import dagger.Module
