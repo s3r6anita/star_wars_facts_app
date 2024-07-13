@@ -9,8 +9,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.f4.starwarsfactsapp.ui.screens.persons.list.ListFactsScreen
-import com.f4.starwarsfactsapp.ui.screens.persons.person.PersonScreen
+import com.f4.starwarsfactsapp.ui.screens.persons.list.ListPersonsScreen
+import com.f4.starwarsfactsapp.ui.screens.persons.person.PersonFactsScreen
 
 @Composable
 fun SetupNavGraph(
@@ -32,9 +32,9 @@ fun SetupNavGraph(
             startDestination = Routes.ListFacts.route
 
         ) {
-            /** список фактов */
+            /** список персонажей */
             composable(route = Routes.ListFacts.route) {
-                ListFactsScreen(
+                ListPersonsScreen(
                     snackbarHostState = remember { SnackbarHostState() },
                     navigate = { route ->
                         navController.navigate(route) {
@@ -43,18 +43,19 @@ fun SetupNavGraph(
                     }
                 )
             }
-            /** информация о факте */
+            /** информация персонаже */
             composable(
-                route = "${Routes.InfoFact.route}/{factId}",
+                route = "${Routes.InfoFact.route}/{personId}",
                 arguments = listOf(
-                    navArgument(name = "factId") {
+                    navArgument(name = "personId") {
                         type = NavType.IntType
                     }
                 )
             ) { backStackEntry ->
-                PersonScreen(
+                PersonFactsScreen(
+                    personId = backStackEntry.arguments?.getInt("personId") ?: -1,
+                    snackbarHostState = remember { SnackbarHostState() },
                     navigateUp = { navController.navigateUp() },
-                    personId = backStackEntry.arguments?.getInt("factId") ?: -1,
                 )
             }
         }

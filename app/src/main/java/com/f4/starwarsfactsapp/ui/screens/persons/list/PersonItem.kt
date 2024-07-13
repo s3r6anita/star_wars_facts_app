@@ -20,7 +20,7 @@ import com.f4.starwarsfactsapp.navigation.Routes
 import com.f4.starwarsfactsapp.util.getIdFromUrl
 
 @Composable
-fun FactItem(
+fun PersonItem(
     person: Person,
     navigate: (String) -> Unit
 ) {

@@ -74,6 +74,7 @@ dependencies {
 
     // Compose
     implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.material)
 
     // DI
     implementation(libs.hilt.android)
@@ -94,5 +95,4 @@ dependencies {
     // DataStore
     implementation(libs.androidx.datastore)
     implementation(libs.kotlinx.collections.immutable)
-
 }

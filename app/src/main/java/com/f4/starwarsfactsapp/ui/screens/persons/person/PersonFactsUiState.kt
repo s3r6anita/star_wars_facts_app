@@ -1,9 +1,9 @@
-package com.f4.starwarsfactsapp.ui.screens.persons.list
+package com.f4.starwarsfactsapp.ui.screens.persons.person
 
 import com.f4.starwarsfactsapp.data.model.Person
 
-data class PersonsUiState(
-    val persons: List<Person> = emptyList(),
+data class PersonFactsUiState(
+    val person: Person = Person(),
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false,
     val errorMsg: String? = null

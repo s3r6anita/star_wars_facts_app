@@ -2,6 +2,7 @@ package com.f4.starwarsfactsapp.ui.screens.persons.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.f4.starwarsfactsapp.data.OtherRepository
 import com.f4.starwarsfactsapp.data.PersonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -13,18 +14,22 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ListPersonsViewModel @Inject constructor(
-    private val personRepository: PersonRepository
+    private val personRepository: PersonRepository,
+    private val otherRepository: OtherRepository
 ) : ViewModel() {
-//    var uiState by mutableStateOf(PersonsUiState())
-//        private set
     private val _uiState = MutableStateFlow(PersonsUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
-        getPeopleFacts()
+        getOtherInfo()
+        getPersonsFacts()
     }
 
-    private fun getPeopleFacts(page: Int? = null) {
+    private fun getOtherInfo(){
+
+    }
+
+    private fun getPersonsFacts(page: Int? = null) {
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch(Dispatchers.IO) {
             val response = personRepository.getPersons(page)
@@ -39,7 +44,7 @@ class ListPersonsViewModel @Inject constructor(
         }
     }
 
-    fun addPeopleFacts() {
+    fun addPersonsFacts() {
         viewModelScope.launch(Dispatchers.IO) {
             val response = personRepository.getNewPersons()
             response?.let {
@@ -49,6 +54,21 @@ class ListPersonsViewModel @Inject constructor(
                         errorMsg = response.error
                     )
                 }
+            }
+            return@launch
+        }
+    }
+
+    fun refreshPersonsFacts() {
+        _uiState.update { it.copy(isRefreshing = true) }
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = personRepository.getPersons()
+            _uiState.update {
+                it.copy(
+                    persons = response.results,
+                    isRefreshing = false,
+                    errorMsg = response.error
+                )
             }
             return@launch
         }

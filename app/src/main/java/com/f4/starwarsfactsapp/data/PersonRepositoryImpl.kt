@@ -3,6 +3,7 @@ package com.f4.starwarsfactsapp.data
 import androidx.datastore.core.DataStore
 import com.f4.starwarsfactsapp.data.model.NetworkResult
 import com.f4.starwarsfactsapp.data.model.Person
+import com.f4.starwarsfactsapp.data.model.PersonResponse
 import com.f4.starwarsfactsapp.data.model.PersonsFactsResponse
 import com.f4.starwarsfactsapp.data.network.ApiHandler
 import com.f4.starwarsfactsapp.data.network.service.StarWarsService
@@ -23,6 +24,15 @@ class PersonRepositoryImpl @Inject constructor(
     }
 
     private fun getLocalPersons(): Flow<PersonsFactsResponse> = dataStore.data
+
+    private suspend fun updatePerson(id: Int, person: Person) {
+        val localData = getLocalPersons().first()
+        val localPersons = localData.results.toMutableList()
+        localPersons[id] = person
+        val newData = localData.copy(results = localPersons.toList())
+        dataStore.updateData { newData }
+    }
+
 
     override suspend fun getPersons(page: Int?): PersonsFactsResponse {
         when (val response = handleApi { starWarsService.getPersons(page) }) {
@@ -68,9 +78,32 @@ class PersonRepositoryImpl @Inject constructor(
             return null
     }
 
-    override suspend fun getPersonFacts(personId: Int): NetworkResult<Person> {
-        return handleApi { starWarsService.getPersonFact(personId) }
+    override suspend fun getLocalPersonFacts(personId: Int): Person {
+        val personsFromMemory = getLocalPersons().first().results
+        return personsFromMemory[personId]
     }
 
+    override suspend fun refreshPersonFacts(personId: Int): PersonResponse {
+        when (val response = handleApi { starWarsService.getPersonFact(personId) }) {
+            is NetworkResult.Success -> {
+                updatePerson(personId, response.data)
+                return PersonResponse(response.data)
+            }
 
+            is NetworkResult.Error -> {
+                return PersonResponse(
+                    person = getLocalPersonFacts(personId),
+                    error = response.errorMsg
+                )
+            }
+
+            is NetworkResult.Exception -> {
+                return PersonResponse(
+                    person = getLocalPersonFacts(personId),
+                    error = response.e.message
+                )
+            }
+        }
+
+    }
 }

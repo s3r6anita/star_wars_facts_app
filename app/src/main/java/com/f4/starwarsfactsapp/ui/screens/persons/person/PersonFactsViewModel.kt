@@ -3,36 +3,51 @@ package com.f4.starwarsfactsapp.ui.screens.persons.person
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.f4.starwarsfactsapp.data.PersonRepository
-import com.f4.starwarsfactsapp.data.model.NetworkResult
-import com.f4.starwarsfactsapp.data.model.Person
-import com.f4.starwarsfactsapp.ui.screens.persons.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PersonFactsViewModel @Inject constructor(
     private val personRepository: PersonRepository
-): ViewModel() {
-    private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
+) : ViewModel() {
+    private val _uiState = MutableStateFlow(PersonFactsUiState())
     val uiState = _uiState.asStateFlow()
-    private val _facts = MutableStateFlow<Person?>(null)
-    val facts = _facts.asStateFlow()
 
-    fun getPeopleFact(peopleId: Int) {
-        _uiState.value = UIState.Loading
+    fun getPersonFacts(personId: Int) {
+        _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch(Dispatchers.IO) {
-            when (val response = personRepository.getPersonFacts(peopleId)) {
-                is NetworkResult.Success -> {
-                    _facts.value = response.data
-                    _uiState.value = UIState.Success(_facts.value)
-                }
-                is NetworkResult.Error -> { _uiState.value = UIState.Error(msg = response.errorMsg, _facts.value) }
-                is NetworkResult.Exception -> { _uiState.value = UIState.Error(msg = response.e.message ?: "", _facts.value) }
+            val facts = personRepository.getLocalPersonFacts(personId)
+            _uiState.update {
+                it.copy(
+                    person = facts,
+                    isLoading = false
+                )
             }
+            return@launch
         }
+    }
+
+    fun refreshPersonFact(personId: Int){
+        _uiState.update { it.copy(isRefreshing = true) }
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = personRepository.refreshPersonFacts(personId)
+            _uiState.update {
+                it.copy(
+                    person = response.person,
+                    isRefreshing = false,
+                    errorMsg = response.error
+                )
+            }
+            return@launch
+        }
+    }
+
+    fun userMessageShown() {
+        _uiState.update { it.copy(errorMsg = null) }
     }
 }
