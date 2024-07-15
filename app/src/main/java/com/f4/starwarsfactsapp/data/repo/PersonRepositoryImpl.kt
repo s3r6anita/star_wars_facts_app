@@ -1,10 +1,10 @@
-package com.f4.starwarsfactsapp.data
+package com.f4.starwarsfactsapp.data.repo
 
 import androidx.datastore.core.DataStore
+import com.f4.starwarsfactsapp.data.model.GetPersonResponse
+import com.f4.starwarsfactsapp.data.model.GetPersonsResponse
 import com.f4.starwarsfactsapp.data.model.NetworkResult
 import com.f4.starwarsfactsapp.data.model.Person
-import com.f4.starwarsfactsapp.data.model.PersonResponse
-import com.f4.starwarsfactsapp.data.model.PersonsFactsResponse
 import com.f4.starwarsfactsapp.data.network.ApiHandler
 import com.f4.starwarsfactsapp.data.network.service.StarWarsService
 import com.f4.starwarsfactsapp.util.getPageFromUrl
@@ -14,16 +14,16 @@ import javax.inject.Inject
 
 class PersonRepositoryImpl @Inject constructor(
     private val starWarsService: StarWarsService,
-    private val dataStore: DataStore<PersonsFactsResponse>
+    private val dataStore: DataStore<GetPersonsResponse>
 ) : PersonRepository, ApiHandler {
 
     private var nextPageId: Int? = null
 
-    private suspend fun savePersons(facts: PersonsFactsResponse) {
+    private suspend fun savePersons(facts: GetPersonsResponse) {
         dataStore.updateData { facts }
     }
 
-    private fun getLocalPersons(): Flow<PersonsFactsResponse> = dataStore.data
+    private fun getLocalPersons(): Flow<GetPersonsResponse> = dataStore.data
 
     private suspend fun updatePerson(id: Int, person: Person) {
         val localData = getLocalPersons().first()
@@ -34,7 +34,7 @@ class PersonRepositoryImpl @Inject constructor(
     }
 
 
-    override suspend fun getPersons(page: Int?): PersonsFactsResponse {
+    override suspend fun getPersons(page: Int?): GetPersonsResponse {
         when (val response = handleApi { starWarsService.getPersons(page) }) {
             is NetworkResult.Success -> {
                 savePersons(response.data)
@@ -55,7 +55,7 @@ class PersonRepositoryImpl @Inject constructor(
     }
 
 
-    override suspend fun getNewPersons(): PersonsFactsResponse? {
+    override suspend fun getNewPersons(): GetPersonsResponse? {
         if (nextPageId != -1) {
             when (val response = handleApi { starWarsService.getPersons(nextPageId) }) {
                 is NetworkResult.Success -> {
@@ -67,11 +67,11 @@ class PersonRepositoryImpl @Inject constructor(
                 }
 
                 is NetworkResult.Error -> {
-                    return PersonsFactsResponse().copy(error = response.errorMsg)
+                    return GetPersonsResponse().copy(error = response.errorMsg)
                 }
 
                 is NetworkResult.Exception -> {
-                    return PersonsFactsResponse().copy(error = response.e.message)
+                    return GetPersonsResponse().copy(error = response.e.message)
                 }
             }
         } else
@@ -83,22 +83,22 @@ class PersonRepositoryImpl @Inject constructor(
         return personsFromMemory[personId]
     }
 
-    override suspend fun refreshPersonFacts(personId: Int): PersonResponse {
+    override suspend fun refreshPersonFacts(personId: Int): GetPersonResponse {
         when (val response = handleApi { starWarsService.getPersonFact(personId) }) {
             is NetworkResult.Success -> {
                 updatePerson(personId, response.data)
-                return PersonResponse(response.data)
+                return GetPersonResponse(response.data)
             }
 
             is NetworkResult.Error -> {
-                return PersonResponse(
+                return GetPersonResponse(
                     person = getLocalPersonFacts(personId),
                     error = response.errorMsg
                 )
             }
 
             is NetworkResult.Exception -> {
-                return PersonResponse(
+                return GetPersonResponse(
                     person = getLocalPersonFacts(personId),
                     error = response.e.message
                 )

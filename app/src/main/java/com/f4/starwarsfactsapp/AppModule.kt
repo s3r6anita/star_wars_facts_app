@@ -3,11 +3,16 @@ package com.f4.starwarsfactsapp
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
-import com.f4.starwarsfactsapp.data.PersonRepository
-import com.f4.starwarsfactsapp.data.PersonRepositoryImpl
-import com.f4.starwarsfactsapp.data.model.PersonsFactsResponse
+import com.f4.starwarsfactsapp.data.model.GetFilmsResponse
+import com.f4.starwarsfactsapp.data.model.GetPersonsResponse
 import com.f4.starwarsfactsapp.data.network.service.StarWarsService
-import com.f4.starwarsfactsapp.util.PersonsFactsResponseSerializer
+import com.f4.starwarsfactsapp.data.repo.FilmRepository
+import com.f4.starwarsfactsapp.data.repo.FilmRepositoryImpl
+import com.f4.starwarsfactsapp.data.repo.PersonRepository
+import com.f4.starwarsfactsapp.data.repo.PersonRepositoryImpl
+import com.f4.starwarsfactsapp.ui.screens.persons.person.GetFilmsTitlesUseCase
+import com.f4.starwarsfactsapp.util.FilmResponseSerializer
+import com.f4.starwarsfactsapp.util.PersonResponseSerializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,9 +26,13 @@ import javax.inject.Singleton
 
 private const val BASE_URL = "https://swapi.dev/api/"
 
-private val Context.dataStore: DataStore<PersonsFactsResponse> by dataStore(
-    fileName = "facts_storage.pb",
-    serializer = PersonsFactsResponseSerializer
+private val Context.personDataStore: DataStore<GetPersonsResponse> by dataStore(
+    fileName = "person_storage.pb",
+    serializer = PersonResponseSerializer
+)
+private val Context.filmDataStore: DataStore<GetFilmsResponse> by dataStore(
+    fileName = "film_storage.pb",
+    serializer = FilmResponseSerializer
 )
 
 @Module
@@ -34,7 +43,22 @@ object AppModule {
         starWarsService: StarWarsService,
         @ApplicationContext appContext: Context
     ): PersonRepository {
-        return PersonRepositoryImpl(starWarsService, appContext.dataStore)
+        return PersonRepositoryImpl(starWarsService, appContext.personDataStore)
+    }
+
+    @[Provides Singleton]
+    fun getFilmRepository(
+        starWarsService: StarWarsService,
+        @ApplicationContext appContext: Context
+    ): FilmRepository {
+        return FilmRepositoryImpl(starWarsService, appContext.filmDataStore)
+    }
+
+    @[Provides Singleton]
+    fun getGetFilmsTitlesUseCase(
+        filmRepository: FilmRepository
+    ): GetFilmsTitlesUseCase {
+        return GetFilmsTitlesUseCase(filmRepository)
     }
 
     @[Provides Singleton]

@@ -2,8 +2,8 @@ package com.f4.starwarsfactsapp.ui.screens.persons.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.f4.starwarsfactsapp.data.OtherRepository
-import com.f4.starwarsfactsapp.data.PersonRepository
+import com.f4.starwarsfactsapp.data.repo.FilmRepository
+import com.f4.starwarsfactsapp.data.repo.PersonRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,18 +15,26 @@ import javax.inject.Inject
 @HiltViewModel
 class ListPersonsViewModel @Inject constructor(
     private val personRepository: PersonRepository,
-    private val otherRepository: OtherRepository
+    private val filmRepository: FilmRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(PersonsUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
-        getOtherInfo()
+        getFilms()
         getPersonsFacts()
     }
 
-    private fun getOtherInfo(){
-
+    private fun getFilms() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = filmRepository.getFilms()
+            _uiState.update {
+                it.copy(
+                    errorMsg = response.error?.let { "Getting films error: ${response.error}" }
+                )
+            }
+            return@launch
+        }
     }
 
     private fun getPersonsFacts(page: Int? = null) {

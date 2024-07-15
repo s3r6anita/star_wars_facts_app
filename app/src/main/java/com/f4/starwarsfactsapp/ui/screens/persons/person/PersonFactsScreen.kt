@@ -42,7 +42,9 @@ fun PersonFactsScreen(
     )
 
     LaunchedEffect(Unit) {
-        scope.launch { viewModel.getPersonFacts(personId) }
+        scope.launch {
+            viewModel.getPersonFacts(personId)
+        }
     }
 
     Scaffold(
@@ -60,7 +62,7 @@ fun PersonFactsScreen(
             if (uiState.isLoading)
                 CircularProgressIndicator(Modifier.align(Alignment.Center))
             else
-                PersonCard(uiState.person)
+                PersonCard(uiState.person, uiState.filmTitles)
 
             PullRefreshIndicator(
                 refreshing = uiState.isRefreshing,
