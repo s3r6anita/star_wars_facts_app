@@ -2,6 +2,7 @@ package com.f4.starwarsfactsapp.data.network.service
 
 import com.f4.starwarsfactsapp.data.model.GetFilmsResponse
 import com.f4.starwarsfactsapp.data.model.GetPersonsResponse
+import com.f4.starwarsfactsapp.data.model.GetPlanetsResponse
 import com.f4.starwarsfactsapp.data.model.Person
 import retrofit2.Response
 import retrofit2.http.GET
@@ -15,9 +16,9 @@ interface StarWarsService {
     @GET("people/{id}")
     suspend fun getPersonFact(@Path("id") id: Int): Response<Person>
 
-//    @GET("planets/")
-//    suspend fun getPlanets(@Query("page") page: Int?): Response<Planet>
-
     @GET("films/")
     suspend fun getFilms(): Response<GetFilmsResponse>
+
+    @GET("planets/")
+    suspend fun getPlanets(@Query("page") page: Int?): Response<GetPlanetsResponse>
 }

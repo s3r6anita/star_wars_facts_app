@@ -5,14 +5,19 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import com.f4.starwarsfactsapp.data.model.GetFilmsResponse
 import com.f4.starwarsfactsapp.data.model.GetPersonsResponse
+import com.f4.starwarsfactsapp.data.model.GetPlanetsResponse
 import com.f4.starwarsfactsapp.data.network.service.StarWarsService
 import com.f4.starwarsfactsapp.data.repo.FilmRepository
 import com.f4.starwarsfactsapp.data.repo.FilmRepositoryImpl
 import com.f4.starwarsfactsapp.data.repo.PersonRepository
 import com.f4.starwarsfactsapp.data.repo.PersonRepositoryImpl
+import com.f4.starwarsfactsapp.data.repo.PlanetRepository
+import com.f4.starwarsfactsapp.data.repo.PlanetRepositoryImpl
 import com.f4.starwarsfactsapp.ui.screens.persons.person.GetFilmsTitlesUseCase
+import com.f4.starwarsfactsapp.ui.screens.persons.person.GetPlanetNamesUseCase
 import com.f4.starwarsfactsapp.util.FilmResponseSerializer
 import com.f4.starwarsfactsapp.util.PersonResponseSerializer
+import com.f4.starwarsfactsapp.util.PlanetResponseSerializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,6 +38,10 @@ private val Context.personDataStore: DataStore<GetPersonsResponse> by dataStore(
 private val Context.filmDataStore: DataStore<GetFilmsResponse> by dataStore(
     fileName = "film_storage.pb",
     serializer = FilmResponseSerializer
+)
+private val Context.planetDataStore: DataStore<GetPlanetsResponse> by dataStore(
+    fileName = "planet_storage.pb",
+    serializer = PlanetResponseSerializer
 )
 
 @Module
@@ -60,6 +69,22 @@ object AppModule {
     ): GetFilmsTitlesUseCase {
         return GetFilmsTitlesUseCase(filmRepository)
     }
+
+    @[Provides Singleton]
+    fun getPlanetRepository(
+        starWarsService: StarWarsService,
+        @ApplicationContext appContext: Context
+    ): PlanetRepository {
+        return PlanetRepositoryImpl(starWarsService, appContext.planetDataStore)
+    }
+
+    @[Provides Singleton]
+    fun getPlanetNamesUseCase(
+        planetRepository: PlanetRepository
+    ): GetPlanetNamesUseCase {
+        return GetPlanetNamesUseCase(planetRepository)
+    }
+
 
     @[Provides Singleton]
     fun provideOkHttpClient(): OkHttpClient {

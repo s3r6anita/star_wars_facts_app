@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.f4.starwarsfactsapp.ui.StarWarsFactsTopBar
 import com.f4.starwarsfactsapp.ui.screens.persons.person.components.PersonCard
-import com.f4.starwarsfactsapp.util.getIdForUrl
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -38,7 +37,7 @@ fun PersonFactsScreen(
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = uiState.isRefreshing,
-        onRefresh = { viewModel.refreshPersonFact(getIdForUrl(personId)) }
+        onRefresh = { viewModel.refreshPersonFact(personId) }
     )
 
     LaunchedEffect(Unit) {
@@ -62,7 +61,7 @@ fun PersonFactsScreen(
             if (uiState.isLoading)
                 CircularProgressIndicator(Modifier.align(Alignment.Center))
             else
-                PersonCard(uiState.person, uiState.filmTitles)
+                PersonCard(uiState.person, uiState.filmTitles, uiState.homeworld)
 
             PullRefreshIndicator(
                 refreshing = uiState.isRefreshing,

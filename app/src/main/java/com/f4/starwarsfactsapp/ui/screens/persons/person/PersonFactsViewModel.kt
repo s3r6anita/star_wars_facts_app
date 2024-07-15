@@ -1,6 +1,5 @@
 package com.f4.starwarsfactsapp.ui.screens.persons.person
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.f4.starwarsfactsapp.data.repo.PersonRepository
@@ -17,7 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PersonFactsViewModel @Inject constructor(
     private val personRepository: PersonRepository,
-    private val getFilmsTitlesUseCase: GetFilmsTitlesUseCase
+    private val getFilmsTitlesUseCase: GetFilmsTitlesUseCase,
+    private val getPlanetNamesUseCase: GetPlanetNamesUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(PersonFactsUiState())
     val uiState = _uiState.asStateFlow()
@@ -27,11 +27,13 @@ class PersonFactsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val facts = personRepository.getLocalPersonFacts(personId)
             val filmTitles = getFilms(facts.films)
+            val homeworldName = getHomeworld(facts.homeworld)
             _uiState.update {
                 it.copy(
                     person = facts,
-                    isLoading = false,
-                    filmTitles = filmTitles
+                    filmTitles = filmTitles,
+                    homeworld = homeworldName,
+                    isLoading = false
                 )
             }
             return@launch
@@ -57,13 +59,19 @@ class PersonFactsViewModel @Inject constructor(
         val allFilmsTitles = viewModelScope.async {
             getFilmsTitlesUseCase()
         }.await()
-        Log.d("tag", allFilmsTitles.toString())
         val ids = getPersonFilmsIds(filmUrls)
-        Log.d("tag", ids.toString())
         val filmTitles =
             allFilmsTitles.filter { title -> ids.contains(allFilmsTitles.indexOf(title)) }
-        Log.d("tag", filmTitles.toString())
         return filmTitles
+    }
+
+    private suspend fun getHomeworld(homeworldUrl: String): String {
+        val allPlanetsNames = viewModelScope.async {
+            getPlanetNamesUseCase()
+        }.await()
+        val homeworldId = getIdFromUrl(homeworldUrl)
+        val homeworldName = allPlanetsNames[homeworldId]
+        return homeworldName
     }
 
     fun userMessageShown() {

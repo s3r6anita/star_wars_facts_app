@@ -18,7 +18,11 @@ import com.f4.starwarsfactsapp.R
 import com.f4.starwarsfactsapp.data.model.Person
 
 @Composable
-fun PersonCard(person: Person, filmsTitles: List<String>) {
+fun PersonCard(
+    person: Person,
+    films: List<String>,
+    homeworld: String
+) {
     Card(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -65,18 +69,19 @@ fun PersonCard(person: Person, filmsTitles: List<String>) {
             )
             TextComponent(
                 header = stringResource(R.string.homeworld),
-                value = person.homeworld
+                value = homeworld
             )
             TextComponent(
                 header = stringResource(R.string.films),
-                value = filmsTitles.joinToString(",\n")
+                value = films.joinToString(",\n")
             )
-            if (person.species.isNotEmpty()) {
-                TextComponent(
-                    header = stringResource(R.string.species),
-                    value = person.species.joinToString(", ")
-                )
-            }
+            // у людей вид не указан
+//            if (person.species.isNotEmpty()) {
+//                TextComponent(
+//                    header = stringResource(R.string.species),
+//                    value = person.species.joinToString(", ")
+//                )
+//            }
 //            TextComponent(
 //                header = stringResource(R.string.vehicles),
 //                value = person.vehicles.joinToString(", ")

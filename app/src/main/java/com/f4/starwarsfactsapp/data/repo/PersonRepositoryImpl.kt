@@ -7,6 +7,7 @@ import com.f4.starwarsfactsapp.data.model.NetworkResult
 import com.f4.starwarsfactsapp.data.model.Person
 import com.f4.starwarsfactsapp.data.network.ApiHandler
 import com.f4.starwarsfactsapp.data.network.service.StarWarsService
+import com.f4.starwarsfactsapp.util.getIdForUrl
 import com.f4.starwarsfactsapp.util.getPageFromUrl
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -84,7 +85,7 @@ class PersonRepositoryImpl @Inject constructor(
     }
 
     override suspend fun refreshPersonFacts(personId: Int): GetPersonResponse {
-        when (val response = handleApi { starWarsService.getPersonFact(personId) }) {
+        when (val response = handleApi { starWarsService.getPersonFact(getIdForUrl(personId)) }) {
             is NetworkResult.Success -> {
                 updatePerson(personId, response.data)
                 return GetPersonResponse(response.data)

@@ -1,5 +1,6 @@
 package com.f4.starwarsfactsapp.navigation
 
+import androidx.compose.animation.EnterTransition
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -19,9 +20,9 @@ fun SetupNavGraph(
     NavHost(
         navController = navController,
         startDestination = START,
+        enterTransition = { EnterTransition.None },
         /**
          *    Отключение анимаций переходов между экранами
-         *       enterTransition = { EnterTransition.None },
          *       exitTransition = { ExitTransition.None },
          *       popEnterTransition = { EnterTransition.None },
          *       popExitTransition = { ExitTransition.None },

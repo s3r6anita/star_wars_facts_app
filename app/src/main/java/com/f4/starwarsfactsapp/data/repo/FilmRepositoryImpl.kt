@@ -13,8 +13,8 @@ class FilmRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<GetFilmsResponse>
 ) : FilmRepository, ApiHandler {
 
-    private suspend fun saveFilms(facts: GetFilmsResponse) {
-        dataStore.updateData { facts }
+    private suspend fun saveFilms(films: GetFilmsResponse) {
+        dataStore.updateData { films }
     }
 
     override suspend fun getLocalFilms(): GetFilmsResponse = dataStore.data.first()

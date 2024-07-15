@@ -4,7 +4,7 @@ import com.f4.starwarsfactsapp.data.model.Person
 
 data class PersonsUiState(
     val persons: List<Person> = emptyList(),
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val isRefreshing: Boolean = false,
     val errorMsg: String? = null
 )

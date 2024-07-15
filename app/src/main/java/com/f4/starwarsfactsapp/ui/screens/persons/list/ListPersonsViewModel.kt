@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.f4.starwarsfactsapp.data.repo.FilmRepository
 import com.f4.starwarsfactsapp.data.repo.PersonRepository
+import com.f4.starwarsfactsapp.data.repo.PlanetRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,12 +16,14 @@ import javax.inject.Inject
 @HiltViewModel
 class ListPersonsViewModel @Inject constructor(
     private val personRepository: PersonRepository,
-    private val filmRepository: FilmRepository
+    private val filmRepository: FilmRepository,
+    private val planetRepository: PlanetRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(PersonsUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
+        getPlanets()
         getFilms()
         getPersonsFacts()
     }
@@ -31,6 +34,17 @@ class ListPersonsViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     errorMsg = response.error?.let { "Getting films error: ${response.error}" }
+                )
+            }
+            return@launch
+        }
+    }
+    private fun getPlanets() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = planetRepository.getPlanets()
+            _uiState.update {
+                it.copy(
+                    errorMsg = response.error?.let { "Getting planets error: ${response.error}" }
                 )
             }
             return@launch
